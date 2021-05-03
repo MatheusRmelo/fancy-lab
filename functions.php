@@ -5,16 +5,35 @@
  * @package Fancy Lab
  */
 
+require_once get_template_directory() . '/inc/customizer.php';
+
+/**
+ * Enqueue scripts and styles.
+ */
 function fancy_lab_scripts(){
     wp_enqueue_script('bootstrap-js', get_template_directory_uri().'/inc/bootstrap.min.js', array('jquery'),'4.6', true);
-
     wp_enqueue_style('bootstrap-css', get_template_directory_uri().'/inc/bootstrap.min.css',array(), '4.6', 'all');
+    // Theme's main stylesheet
     wp_enqueue_style('fancy-lab-style', get_stylesheet_uri(),array(), filemtime(get_template_directory().'/style.css'), 'all');
+
+    // Google Fonts
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Seaweed+Script&display=swap');
+
+    // Flexslider
+    wp_enqueue_style('flexslider-css', get_template_directory_uri().'/inc/flexslider/flexslider.css',array(), '2.7.2', 'all');
+    wp_enqueue_script('flexslider-min-js', get_template_directory_uri().'/inc/flexslider/jquery.flexslider-min.js', array('jquery'),'2.7.2', true);
+    wp_enqueue_script('flexslider-js', get_template_directory_uri().'/inc/flexslider/flexslider.js', array('jquery'),'2.7.2', true);
+
 }
 
 add_action('wp_enqueue_scripts','fancy_lab_scripts');
 
 function fancy_lab_config(){
+
+    //Boostrap Menu 
+    require_once get_template_directory() . '/inc/class-wp-bootstrap-navwalker.php';
+
+
     register_nav_menus(
         array(
             'fancy_lab_main_menu' => 'Fancy Lab Main Menu',
@@ -39,6 +58,15 @@ function fancy_lab_config(){
     add_theme_support('wc-product-gallery-lightbox');
     add_theme_support('wc-product-gallery-slider');
 
+    add_theme_support('custom-logo', array(
+        'height' => 85,
+        'width' => 160,
+        'flex-height' => true,
+        'flex-width' => true
+    ));
+
+    add_image_size('fancy_lab_slider',1920,800,array('center','center'));
+
     if(!isset($content_width)){
         $content_width = 600;
     }
@@ -46,41 +74,23 @@ function fancy_lab_config(){
 
 add_action('after_setup_theme', 'fancy_lab_config', 0);
 
-add_action('woocommerce_before_main_content', 'fancy_lab_open_container_row',5);
-function fancy_lab_open_container_row(){
-    echo '<div class="container shop-content" ><div class="row">';
+if(class_exists('woocommerce')){
+    require get_template_directory().'/inc/wc-modifications.php';
 }
 
-add_action('woocommerce_after_main_content', 'fancy_lab_close_container_row',5);
-function fancy_lab_close_container_row(){
-    echo '</div></div>';
-}
+/**
+ * Show cart contents / total Ajax
+ */
+add_filter( 'woocommerce_add_to_cart_fragments', 'fancy_lab_woocommerce_header_add_to_cart_fragment' );
 
-add_action('woocommerce_before_main_content','fancy_lab_add_sidebar_tags', 6);
-function fancy_lab_add_sidebar_tags(){
-    echo '<div class="sidebar-shop col-lg-3 col-md-4 order-2 order-md-1">';
-}
-add_action('woocommerce_before_main_content', 'fancy_lab_close_sidebar_tags', 8);
-function fancy_lab_close_sidebar_tags(){
-    echo '</div>';
-}
+function fancy_lab_woocommerce_header_add_to_cart_fragment( $fragments ) {
+	global $woocommerce;
 
-add_action('woocommerce_before_main_content', 'fancy_lab_add_shop_tags', 9);
-function fancy_lab_add_shop_tags(){
-    echo '<div class="col-lg-9 col-md-8 order-1 order-md-2">';
+	ob_start();
+
+	?>
+    <span class="items"><?= WC()->cart->get_cart_contents_count(); ?></span>
+	<?php
+	$fragments['span.items'] = ob_get_clean();
+	return $fragments;
 }
-
-add_action('woocommerce_after_main_content', 'fancy_lab_close_shop_tags', 4);
-function fancy_lab_close_shop_tags(){
-    echo '</div>';
-}
-
-remove_action('woocommerce_sidebar', 'woocommerce_get_sidebar');
-add_action('woocommerce_before_main_content', 'woocommerce_get_sidebar', 7);
-
-add_filter('woocommerce_show_page_title', 'fancy_lab_remove_shop_title');
-function fancy_lab_remove_shop_title($value){
-    $value = false; 
-    return $value;
-}
-

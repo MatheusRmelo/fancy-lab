@@ -216,6 +216,94 @@
             )
         );
 
+     /***********************************/
+
+    //Home Page Settings
+
+    $wp_customize->add_section(
+        'sec_home_page', array(
+            'title'             => 'Home Page Products and Blog Settings',
+            'description'       => 'Home Page Section',
+        )
+    );
+        // Field 1 - Slider Page Number 1
+
+        $wp_customize->add_setting(
+            'set_popular_max_num', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'absint'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_popular_max_num', array(
+                'label'         => 'Popular Products Max Number',
+                'description'   => 'Popular Products Max Number',
+                'section'       => 'sec_home_page',
+                'type'          => 'number'
+            )
+        );
+
+         // Field 1 - Slider Page Number 1
+
+         $wp_customize->add_setting(
+            'set_popular_max_col', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'absint'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_popular_max_col', array(
+                'label'         => 'Popular Products Max Columns',
+                'description'   => 'Popular Products Max Columns',
+                'section'       => 'sec_home_page',
+                'type'          => 'number'
+            )
+        );
+
+          // Field 1 - Slider Page Number 1
+
+          $wp_customize->add_setting(
+            'set_new_arrivals_max_num', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'absint'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_new_arrivals_max_num', array(
+                'label'         => 'New Arrivals Products Max Number',
+                'description'   => 'New Arrivals Products Max Number',
+                'section'       => 'sec_home_page',
+                'type'          => 'number'
+            )
+        );
+
+         // Field 1 - Slider Page Number 1
+
+         $wp_customize->add_setting(
+            'set_new_arrivals_max_col', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'absint'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_new_arrivals_max_col', array(
+                'label'         => 'New Arrivals Products Max Columns',
+                'description'   => 'New Arrivals Products Max Columns',
+                'section'       => 'sec_home_page',
+                'type'          => 'number'
+            )
+        );
+
+        
+
 }
 
 add_action('customize_register', 'fancy_lab_customizer');

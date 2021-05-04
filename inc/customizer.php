@@ -302,8 +302,49 @@
             )
         );
 
+        // Deal of the Week checkbox
+
+        $wp_customize->add_setting(
+            'set_deal_show', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'fancy_lab_sanitize_checkbox'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_deal_show', array(
+                'label'         => 'Show deal of the week?',
+                'section'       => 'sec_home_page',
+                'type'          => 'checkbox'
+            )
+        );
+
+        // Deal of the Week Product ID
+
+        $wp_customize->add_setting(
+            'set_deal', array(
+                'type'              => 'theme_mod',
+                'default'           => '',
+                'sanitize_callback' => 'absint'
+            )
+        );
+
+        $wp_customize->add_control(
+            'set_deal', array(
+                'label'         => 'Deal of the Week Product ID',
+                'description'   => 'Product ID to Display',
+                'section'       => 'sec_home_page',
+                'type'          => 'number'
+            )
+        );
+
         
 
 }
 
 add_action('customize_register', 'fancy_lab_customizer');
+
+function fancy_lab_sanitize_checkbox($checked){
+    return (isset($checked) && $checked == true) ? true : false;
+}
